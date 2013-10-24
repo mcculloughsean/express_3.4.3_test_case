@@ -2,7 +2,7 @@ var express = require('express'),
     http = require('http'),
     path = require('path');
 
-var innerApp = express();
+var innerApp = express(),
     outerApp = express();
 
 innerApp.get('/', function (req, res, next) {res.end("Hello, world")});
@@ -14,4 +14,4 @@ outerApp.get('/', function (req, res, next) {res.end("Home sweet home")});
 outerApp.get('*', function (req, res, next) {res.end("fallback")});
 
 server = http.createServer(outerApp);
-server.listen(5679);
+server.listen(process.argv[2]);

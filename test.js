@@ -2,29 +2,37 @@ var http = require('http'),
     cp = require('child_process'),
     async = require('async');
 
-var app3_4_2_with_static = cp.spawn('node', ['with_static.js'], {cwd: __dirname+'/3.4.2'});
-var app3_4_2_without_static = cp.spawn('node', ['without_static.js'], {cwd: __dirname+'/3.4.2'});
-var app3_4_2_with_static_no_redirect = cp.spawn('node', ['with_static_no_redirect.js'], {cwd: __dirname+'/3.4.2'});
-
-var app3_4_3_with_static = cp.spawn('node', ['with_static.js'], {cwd: __dirname+'/3.4.3'});
-var app3_4_3_without_static = cp.spawn('node', ['without_static.js'], {cwd: __dirname+'/3.4.3'});
-var app3_4_3_with_static_no_redirect = cp.spawn('node', ['with_static_no_redirect.js'], {cwd: __dirname+'/3.4.3'});
 
 var tasks = {};
+var spawns = {};
+
+var portStart = 6000;
 var tests = [
-  ['app3_4_2_with_static', 5678],
-  ['app3_4_2_without_static', 5679],
-  ['app3_4_2_with_static_no_redirect', 5683],
-  ['app3_4_3_with_static', 5680],
-  ['app3_4_3_without_static', 5681],
-  ['app3_4_3_with_static_no_redirect', 5682]
+  ['3_4_2/with_static', portStart++],
+  ['3_4_2/with_static_no_mount', portStart++],
+  ['3_4_2/without_static', portStart++],
+  ['3_4_2/with_static_no_redirect', portStart++],
+  ['3_4_3/with_static', portStart++],
+  ['3_4_3/with_static_no_mount', portStart++],
+  ['3_4_3/without_static', portStart++],
+  ['3_4_3/with_static_no_redirect', portStart++]
 ];
 
 for (var testIndex in tests) {
   (function () {
     var testType = tests[testIndex][0];
     var testPort = tests[testIndex][1];
+
+    var splitTestName = testType.split("/");
+
+    var testVersion = splitTestName[0].replace(/_/g, '.');
+    var testScenario = splitTestName[1];
+
+    console.log("Spawning", [testScenario+".js", testPort], {cwd: __dirname+'/'+testVersion});
+    spawns[testType] = cp.spawn('node', [testScenario+".js", testPort], {cwd: __dirname+'/'+testVersion});
+
     console.log("Creating Tests for ", tests[testIndex]);
+
     tasks["root_"+testType] = function (done) {
       var url = "http://localhost:"+testPort;
       http.get(url, function(res) {
@@ -77,6 +85,7 @@ for (var testIndex in tests) {
       keys.forEach(function(key) {
         console.log(res[key].statusCode + ": " + key + ": " + res[key].url);
       });
+      Object.keys(spawns).forEach(function(process) { spawns[process].kill() });
       process.exit();
 
     });

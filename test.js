@@ -1,7 +1,6 @@
 var http = require('http'),
     cp = require('child_process'),
-    async = require('async'),
-    underscore = require('underscore');
+    async = require('async');
 
 var app3_4_2_with_static = cp.spawn('node', ['with_static.js'], {cwd: __dirname+'/3.4.2'});
 var app3_4_2_without_static = cp.spawn('node', ['without_static.js'], {cwd: __dirname+'/3.4.2'});

@@ -1,0 +1,22 @@
+{
+  "name": "express_test_case",
+  "version": "0.0.0",
+  "description": "",
+  "main": "test.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mcculloughsean/express_3.4.3_test_case.git"
+  },
+  "author": "",
+  "license": "BSD",
+  "gitHead": "b39471994df6175c9bde1efb1098a71183b5bb4f",
+  "bugs": {
+    "url": "https://github.com/mcculloughsean/express_3.4.3_test_case/issues"
+  },
+  "dependencies": {
+    "async": "~0.2.9"
+  }
+}
